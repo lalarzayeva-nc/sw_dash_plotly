@@ -445,7 +445,11 @@ fig_missed = px.line(
 fig_missed.update_traces(
     textposition="top right", 
     texttemplate='%{text:.0f}%', 
-    marker=dict(size=8)  
+    marker=dict(size=8),
+    hovertemplate='<b>Day: %{x}</b><br>' +
+                  'Percentage of Users: %{y:.2f}%<br>' +
+                  'Missed Count: %{customdata[0]}<extra></extra>',  # Custom hover data
+    customdata=grouped[['missed_count']].values  # Pass missed_count as custom data
 )
 
 fig_missed.update_layout(
@@ -453,13 +457,12 @@ fig_missed.update_layout(
     title={
         'font': {
             'color': 'gray',  # Set title color to light gray
-            'family': 'Arial',     # Specify font family
-            'size': 18    # Set title size
+            'family': 'Arial',  # Specify font family
+            'size': 18  # Set title size
         }
     },
     height=500,
     xaxis=dict(tickmode='linear', dtick=1) 
-   
 )
 #######################################################################################################################################################
 
