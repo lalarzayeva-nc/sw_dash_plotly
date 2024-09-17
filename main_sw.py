@@ -447,7 +447,7 @@ fig_missed.update_traces(
     texttemplate='%{text:.0f}%', 
     marker=dict(size=8),
     hovertemplate='<b>Day: %{x}</b><br>' +
-                  'Percentage of Users: %{y:.2f}%<br>' +
+                  'Percentage of Users: %{y:.0f}%<br>' +
                   'Missed Count: %{customdata[0]}<extra></extra>',  # Custom hover data
     customdata=grouped[['missed_count']].values  # Pass missed_count as custom data
 )
