@@ -462,7 +462,7 @@ fig_missed = px.line(
     grouped, 
     x='day_of_order_date', 
     y='missed_count', 
-    title=f'Missed Installments per Day: Count of users missing installments daily for {SG} for {current_month}.',
+    title=f'Missed Installments per Day: Count of Installments missed daily for {SG} for {current_month}.',
     labels={'day_of_order_date': 'Day of Order Date', 'percentage_of_users': '% of Users'},
     markers=True,  
     line_shape='spline',  
