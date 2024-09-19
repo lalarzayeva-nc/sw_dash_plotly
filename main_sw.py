@@ -222,8 +222,8 @@ fig_loan.update_xaxes(tickmode='linear', dtick=1)
 
 color_map = {
     'pending': '#e3cb14',     # verification-pending (yellow)'#fff45c'
-    'rejected': '#942222',     #   '#ffa3a3',    # verification-rejected (light red)
-    'verified': '#278c27'    #'#bfe3bf'     # verification-verified (light green)
+    'rejected': '#fc8b8b',     #   '#ffa3a3',    # verification-rejected (light red)
+    'verified': '#33bd33'    #'#bfe3bf'     # verification-verified (light green)
 }
 
 import pandas as pd
