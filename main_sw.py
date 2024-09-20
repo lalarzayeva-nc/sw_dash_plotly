@@ -7,13 +7,12 @@ import io
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
-#import constants as cn
-SG = "SW"
-
 
 service_account_info = st.secrets["gcp_service_account"]
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
 service = build('drive', 'v3', credentials=credentials)
+
+SG = "SW"
 
 def read_data(name, id):
     file_id = id
@@ -34,6 +33,8 @@ read_data('df_verifications', '1TxgH3FNX3-DJ97XGEjxtYU5ykLNkcYz5')
 read_data('healthy_book', '11l8yadH-Ycj1iRP9HCY5ye9iGIeityS6')
 read_data('installment_schedule', '1PyxvOWiTPEXXedIGL1Sb3fgqCJ_wVAgO')
 read_data('total_installment_summary', '1galogx7-kHbNrUwX-szYXHNWwewLJ8bH')
+
+
 
 # df = pd.read_csv('risk_dumps/historical_loans_PL.csv')
 df = df[df['which_month'] == 'current_month']
@@ -140,7 +141,7 @@ verified_count = f"{total_verified:,}"
 total_installment_summary = total_installment_summary[total_installment_summary['which_month']=='current_month']
 total_installments_to_receive = f"{total_installment_summary[total_installment_summary['status'] =="SCHEDULED"]['status_count'].values[0]:,.0f}"
 installments_already_received = f"{total_installment_summary[total_installment_summary['status'] =="PAID"]['status_count'].values[0]:,.0f}"
-total_misses = f"{total_installment_summary[total_installment_summary['status'] =="MISSED"]['status_count'].values[0]:,.0f}"
+total_misses = f"{total_installment_summary[total_installment_summary['status'] == 'MISSED']['status_count'].values[0] if len(total_installment_summary[total_installment_summary['status'] == 'MISSED']['status_count'].values) > 0 else 0:,.0f}"
 totall = f"{total_installment_summary[total_installment_summary['status'] =="TOTAL"]['status_count'].values[0]:,.0f}"
 #####################################################
 ########################################################
@@ -277,9 +278,7 @@ fig_verifications.update_layout(
 )
 
 fig_verifications.update_xaxes(tickmode='linear', dtick=1)
-
-
-
+fig_verifications.update_yaxes(range=[0, 120])
 
 
 #######################################################################################################################################################
@@ -525,6 +524,9 @@ metrics_html = f"""
             font-family: Arial, sans-serif;
             margin-bottom: 15px;
         }}
+        .summary-box {{
+            font-family: Arial, sans-serif;
+        }}
     </style>
 </head>
 <body>
@@ -597,6 +599,7 @@ metrics_verif_html = f"""
             margin: 0;
             font-size: 1em;
             color: #333333;
+            font-family: Arial, sans-serif;
         }}
         .verification-box h3 {{
             font-size: 2em;
@@ -669,6 +672,9 @@ metrics_payments = f"""
             font-family: Arial, sans-serif;
             margin-bottom: 15px;
         }}
+        .summary-box {{
+            font-family: Arial, sans-serif;
+        }}
     </style>
 </head>
 <body>
@@ -731,6 +737,9 @@ metrics_average_loan = f"""
             color: gray;
             font-family: Arial, sans-serif;
             margin-bottom: 15px;
+        }}
+        .summary-box {{
+            font-family: Arial, sans-serif;
         }}
     </style>
 </head>
