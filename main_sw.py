@@ -202,7 +202,7 @@ fig_loan = px.line(summary,
                    y='total_loan_disbursed', 
                    text='total_loan_disbursed',
                    title = f'Total Loans Disbursed per Day: Total number of loans disbursed daily for {SG} for the month of {current_month}',
-                   labels={'created_date': 'Day of Month', 'total_loan_disbursed': 'Total Loans'},
+                   labels={'created_date': 'Day of Month', 'total_loan_disbursed': 'Total Loans (QAR)'},
                    markers=True)
 
 fig_loan.update_layout(
@@ -289,7 +289,7 @@ fig_aov = px.line(
     y='aov', 
     text='aov',
     title = f'Average order value per day for {SG} for the month of {current_month}',
-    labels={'day_of_created_date': 'Day of created date', 'aov': 'Average Order Value'},
+    labels={'day_of_created_date': 'Day of created date', 'aov': 'Average Order Value (QAR)'},
     markers=True
 )
 
@@ -355,7 +355,7 @@ fig_line_aov = px.line(
     y='aov',
     color='merchant_name',  # Color by merchant
     title= f'AOV by Merchant Daily: Average order value per day by merchant for {SG} for the month of {current_month}',
-    labels={'day_of_created_date': 'Day', 'aov': 'Average Order Value'},
+    labels={'day_of_created_date': 'Day', 'aov': 'Average Order Value (QAR)'},
     markers=True,
     text='aov',
     line_shape='spline'
@@ -424,7 +424,7 @@ fig_line_gmv = px.line(
     y='gmv', 
     color='merchant_name',  
     title= f'GMV by Merchant: Gross Merchandise Value per day by each merchant for {SG} for {current_month}.',
-    labels={'day_of_created_date': 'Day', 'gmv': 'GMV'},
+    labels={'day_of_created_date': 'Day', 'gmv': 'GMV (QAR)'},
     markers=True,  
     text='gmv' ,
      line_shape='spline'
@@ -549,7 +549,7 @@ metrics_html = f"""
             <h3>{total_paid} QAR</h3>
         </div>
         <div class="summary-box">
-            <p>Percentage Miss Rate</p>
+            <p>Percentace Miss Rate</p>
             <h3>{percentage_miss_rate}</h3>
         </div>
         <div class="summary-box">
@@ -634,7 +634,6 @@ metrics_verif_html = f"""
 """
 
 
-
 metrics_payments = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -664,6 +663,7 @@ metrics_payments = f"""
             margin: 0;
             font-size: 1.5em;
             color: #333;
+            margin-bottom: 15px;
         }}
         .heading {{
             margin-top: 0px;
@@ -674,6 +674,11 @@ metrics_payments = f"""
         }}
         .summary-box {{
             font-family: Arial, sans-serif;
+            padding-bottom: 10px;
+        }}
+        .summary-title {{
+            font-size: 15px;
+            padding: 5px;
         }}
     </style>
 </head>
@@ -681,22 +686,23 @@ metrics_payments = f"""
     <h1 class="heading">Installments Summary for {current_month}</h1>
     <div class="summary-container">
         <div class="summary-box">
-            <p>Total Installments Due this Month</p>
+            <p class="summary-title">Total Installments Due this Month</p>
             <h3>{totall}</h3>
         </div>
-        <div class="summary-box">
-            <p>Total Installments already Received</p>
+         <div class="summary-box">
+            <p class="summary-title">Total Installments already Received</p>
             <h3>{installments_already_received}</h3>
         </div>
         <div class="summary-box">
-            <p>Total Installments yet to be Received</p>
+            <p class="summary-title">Total Installments yet to be Received</p>
             <h3>{total_installments_to_receive}</h3>
         </div>
-        <div class="summary-box">
-            <p>Total Installments Missed</p>
+         <div class="summary-box">
+            <p class="summary-title">Total Installments Missed</p>
             <h3>{total_misses}</h3>
         </div>
     </div>
+    
 </body>
 </html>
 """
@@ -748,7 +754,7 @@ metrics_average_loan = f"""
     <div class="summary-container">
          <div class="summary-box">
             <p>Average Loan Amount this Month</p>
-            <h3>{average_loan_this_month}</h3>
+            <h3>{average_loan_this_month} QAR</h3>
         </div>
     </div>
     
@@ -760,7 +766,8 @@ components.html(metrics_html, height=330, scrolling=True)
 st.plotly_chart(fig_loan, use_container_width=True)
 components.html(metrics_verif_html, height=170, scrolling=True)
 st.plotly_chart(fig_verifications, use_container_width=True)
-components.html(metrics_payments, height=170, scrolling=True)
+#components.html(metrics_payments, height=170, scrolling=True)
+components.html(metrics_payments, height=190, scrolling=True)
 st.plotly_chart(fig_loan_active, use_container_width=True)
 components.html(metrics_average_loan, height=170, scrolling=True)
 st.plotly_chart(fig_aov, use_container_width=True)
