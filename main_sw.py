@@ -549,7 +549,7 @@ metrics_html = f"""
             <h3>{total_paid} QAR</h3>
         </div>
         <div class="summary-box">
-            <p>Percentace Miss Rate</p>
+            <p>Percentage Miss Rate</p>
             <h3>{percentage_miss_rate}</h3>
         </div>
         <div class="summary-box">
