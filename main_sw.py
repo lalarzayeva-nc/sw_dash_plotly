@@ -37,7 +37,15 @@ read_data('total_installment_summary', '1galogx7-kHbNrUwX-szYXHNWwewLJ8bH')
 
 
 # df = pd.read_csv('risk_dumps/historical_loans_PL.csv')
-df = df[df['which_month'] == 'current_month']
+
+df = df[df['which_month']=='current_month']
+if df.shape[0] == 0:
+    read_data('df', '1NLmx2WhjyDuupfUc88DgHPRY-vJt5jg8')
+    df = df[df['which_month']=='last_month']
+    df['created_datetime_dubai'] = pd.to_datetime(df['created_datetime_dubai'], errors='coerce')
+    df = df[df['created_datetime_dubai'] == df['created_datetime_dubai'].max()]
+
+
 df['created_date'] = pd.to_datetime(df['created_datetime_dubai']).dt.day
 
 df['net_loss_new'] = np.where(
@@ -57,6 +65,12 @@ summary['percentage_loan_disbursed'] = (summary['total_loan_disbursed'] / summar
 # dd = pd.read_csv('risk_dumps/PL_Installments_Report_daily.csv')
 dd = dd[dd['which_month'] == 'current_month']
 dd['Order Date (UTC Time)'] = pd.to_datetime(dd['Order Date (UTC Time)'])
+if dd.shape[0]==0:
+    read_data('dd', '1Z548Jxk8jJiem3G6-vk2dDe_XLu3ti-j')
+    dd = dd[dd['which_month'] == 'last_month']
+    dd['Order Date (UTC Time)'] = pd.to_datetime(dd['Order Date (UTC Time)'])
+    dd = dd[dd['Order Date (UTC Time)'] == dd['Order Date (UTC Time)'].max()]
+
 dd['day'] = dd['Order Date (UTC Time)'].dt.day
 
 summary_active = dd.groupby('day').agg(
@@ -65,13 +79,32 @@ summary_active = dd.groupby('day').agg(
 
 # Verifications data
 # df_verifications = pd.read_csv('risk_dumps/verifications_PL.csv')
+# df_verifications = df_verifications[df_verifications['which_month'] == 'current_month']
+# df_verifications['attempted_at'] = pd.to_datetime(df_verifications['attempted_at'])
+# df_verifications['day'] = df_verifications['attempted_at'].dt.day
+
+# df_verifications['created_at'] = pd.to_datetime(df_verifications['created_at'], errors='coerce')
+# df_verifications['month'] = df_verifications['created_at'].dt.strftime('%B')
+# current_month= df_verifications['month'].dropna().unique()[0]
+
 df_verifications = df_verifications[df_verifications['which_month'] == 'current_month']
 df_verifications['attempted_at'] = pd.to_datetime(df_verifications['attempted_at'])
 df_verifications['day'] = df_verifications['attempted_at'].dt.day
-
 df_verifications['created_at'] = pd.to_datetime(df_verifications['created_at'], errors='coerce')
 df_verifications['month'] = df_verifications['created_at'].dt.strftime('%B')
-current_month= df_verifications['month'].dropna().unique()[0]
+try:
+   current_month= df_verifications['month'].dropna().unique()[0]
+except: 
+    read_data('df_verifications', '1TxgH3FNX3-DJ97XGEjxtYU5ykLNkcYz5')
+    df_verifications = df_verifications[df_verifications['which_month'] == 'last_month']
+    df_verifications['attempted_at'] = pd.to_datetime(df_verifications['attempted_at'])
+    df_verifications['day'] = df_verifications['attempted_at'].dt.day
+    df_verifications['created_at'] = pd.to_datetime(df_verifications['created_at'], errors='coerce')
+    df_verifications = df_verifications[df_verifications['which_month'] == 'last_month']
+    df_verifications = df_verifications[df_verifications['created_at'] == df_verifications['created_at'].max()]
+    df_verifications['month'] = df_verifications['created_at'].dt.strftime('%B')
+    current_month= df_verifications['month'].dropna().unique()[0]
+
 
 verification_totals = df_verifications.groupby('verification_status')['user_id'].count().reset_index()
 total_pending = verification_totals[verification_totals['verification_status'] == 'pending']['user_id'].sum()
@@ -86,9 +119,25 @@ user_counts['percentage_of_users'] = (user_counts['user_id'] / user_counts['tota
 
 #Average order value
 #healthy_book = pd.read_csv(r"C:\Users\user\Downloads\exported_workbooks\healthy_book.csv")
+# healthy_book = healthy_book[healthy_book['which_month']=='current_month']
+# healthy_book['created_at'] = pd.to_datetime(healthy_book['created_at'])
+# healthy_book['day_of_created_date'] = healthy_book['created_at'].dt.day
+
+
 healthy_book = healthy_book[healthy_book['which_month']=='current_month']
 healthy_book['created_at'] = pd.to_datetime(healthy_book['created_at'])
 healthy_book['day_of_created_date'] = healthy_book['created_at'].dt.day
+if healthy_book.shape[0]==0:
+    read_data('healthy_book', '11l8yadH-Ycj1iRP9HCY5ye9iGIeityS6')
+    healthy_book = healthy_book[healthy_book['which_month']=='last_month']
+    healthy_book['created_at'] = pd.to_datetime(healthy_book['created_at'])
+    healthy_book['day_of_created_date'] = healthy_book['created_at'].dt.day
+    healthy_book = healthy_book[healthy_book['created_at'] == healthy_book['created_at'].max()]
+
+
+
+
+
 healthy_book['aov_aed'] = healthy_book['aed_amount']
 healthy = healthy_book.groupby('day_of_created_date').agg(
     aov=('aov_aed', 'mean')
@@ -149,7 +198,16 @@ totall = f"{total_installment_summary[total_installment_summary['status'] =="TOT
 
 average_loan_this_month = f"{healthy_book['aov_aed'].mean():,.0f}"
 
+
+
 missed = missed[missed['which_month']=='current_month']
+if missed.shape[0] == 0:
+    read_data('missed', '1X3hay1mYbVIcI1o9IJhnrPUdx_Ay9-g9')
+    missed = missed[missed['which_month']=='last_month']
+    missed = missed[missed['inst_due_at'] == missed['inst_due_at'].max()]
+    
+
+
 missed['order_date'] = pd.to_datetime(missed['order_date'])
 missed['day_of_order_date'] = missed['order_date'].dt.day
 grouped = missed.groupby('day_of_order_date').agg(
