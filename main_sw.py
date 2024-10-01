@@ -43,7 +43,7 @@ if df.shape[0] == 0:
     read_data('df', '1NLmx2WhjyDuupfUc88DgHPRY-vJt5jg8')
     df = df[df['which_month']=='last_month']
     df['created_datetime_dubai'] = pd.to_datetime(df['created_datetime_dubai'], errors='coerce')
-    df = df[df['created_datetime_dubai'] == df['created_datetime_dubai'].max()]
+    df = df[pd.to_datetime(df['created_datetime_dubai']).dt.day==df['created_datetime_dubai'].max().day]
 
 
 df['created_date'] = pd.to_datetime(df['created_datetime_dubai']).dt.day
@@ -69,7 +69,8 @@ if dd.shape[0]==0:
     read_data('dd', '1Z548Jxk8jJiem3G6-vk2dDe_XLu3ti-j')
     dd = dd[dd['which_month'] == 'last_month']
     dd['Order Date (UTC Time)'] = pd.to_datetime(dd['Order Date (UTC Time)'])
-    dd = dd[dd['Order Date (UTC Time)'] == dd['Order Date (UTC Time)'].max()]
+    #dd = dd[dd['Order Date (UTC Time)'] == dd['Order Date (UTC Time)'].max()]
+    dd = dd[pd.to_datetime(dd['Order Date (UTC Time)']).dt.day==dd['Order Date (UTC Time)'].max().day]
 
 dd['day'] = dd['Order Date (UTC Time)'].dt.day
 
@@ -101,7 +102,8 @@ except:
     df_verifications['day'] = df_verifications['attempted_at'].dt.day
     df_verifications['created_at'] = pd.to_datetime(df_verifications['created_at'], errors='coerce')
     df_verifications = df_verifications[df_verifications['which_month'] == 'last_month']
-    df_verifications = df_verifications[df_verifications['created_at'] == df_verifications['created_at'].max()]
+    df_verifications = df_verifications[pd.to_datetime(df_verifications['created_at']).dt.day==df_verifications['created_at'].max().day]
+    #df_verifications = df_verifications[df_verifications['created_at'] == df_verifications['created_at'].max()]
     df_verifications['month'] = df_verifications['created_at'].dt.strftime('%B')
     current_month= df_verifications['month'].dropna().unique()[0]
 
@@ -132,7 +134,8 @@ if healthy_book.shape[0]==0:
     healthy_book = healthy_book[healthy_book['which_month']=='last_month']
     healthy_book['created_at'] = pd.to_datetime(healthy_book['created_at'])
     healthy_book['day_of_created_date'] = healthy_book['created_at'].dt.day
-    healthy_book = healthy_book[healthy_book['created_at'] == healthy_book['created_at'].max()]
+    #healthy_book = healthy_book[healthy_book['created_at'] == healthy_book['created_at'].max()]
+    healthy_book = healthy_book[pd.to_datetime(healthy_book['created_at']).dt.day==healthy_book['created_at'].max().day]
 
 
 
@@ -203,8 +206,10 @@ average_loan_this_month = f"{healthy_book['aov_aed'].mean():,.0f}"
 missed = missed[missed['which_month']=='current_month']
 if missed.shape[0] == 0:
     read_data('missed', '1X3hay1mYbVIcI1o9IJhnrPUdx_Ay9-g9')
+    missed['inst_due_at'] = pd.to_datetime(missed['inst_due_at'])
     missed = missed[missed['which_month']=='last_month']
-    missed = missed[missed['inst_due_at'] == missed['inst_due_at'].max()]
+    #missed = missed[missed['inst_due_at'] == missed['inst_due_at'].max()]
+    missed = missed[pd.to_datetime(missed['inst_due_at']).dt.day==missed['inst_due_at'].max().day]
     
 
 
