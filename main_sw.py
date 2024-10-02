@@ -229,7 +229,7 @@ grouped['percentage_of_users'] = (grouped['missed_count'] / grouped['count']) * 
 
 
 
-percentage_miss_rate = f"{(df[df['n_missed_days'] > 0].shape[0] / df.shape[0]) * 100:.0f}%"
+percentage_miss_rate = f"{(df[df['n_missed_days'] > 0].shape[0] / (df.shape[0]+1)) * 100:.0f}%"
 
 #DELINQUENCY_RATE
 ######################################################
